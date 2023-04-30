@@ -36,7 +36,8 @@
     }
   },
   "require-dev": {
-    "hautelook/alice-bundle": "^2.12"
+    "hautelook/alice-bundle": "^2.12",
+    "symfony/maker-bundle": "^1.48"
   },
   "scripts": {
     "auto-scripts": {

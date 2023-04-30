@@ -2,16 +2,15 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Faction
+ * Mission
  *
- * @ORM\Table(name="factions")
+ * @ORM\Table(name="missions")
  * @ORM\Entity
  */
-class Faction
+class Mission
 {
     /**
      * @var int
@@ -25,9 +24,9 @@ class Faction
     /**
      * @var string
      *
-     * @ORM\Column(name="faction_name", type="string", length=128, nullable=false)
+     * @ORM\Column(name="name", type="string", length=128, nullable=false)
      */
-    private string $factionName;
+    private string $name;
 
     /**
      * @var string
@@ -37,23 +36,23 @@ class Faction
     private string $description;
 
     /**
-     * @var Creature
+     * @var int
      *
-     * @ORM\OneToOne(targetEntity="Creature")
+     * Accepted values from 1 to 10
+     * @ORM\Column(name="difficulty", type="integer", nullable=false)
      */
-    private Creature $leader;
+    private int $difficulty;
 
     /**
-     * @var ArrayCollection<Creature>
+     * @var bool
      *
-     * @ORM\OneToMany(targetEntity="Creature", mappedBy="faction")
+     *@ORM\Column(name="finished", type="boolean", nullable=false)
      */
-    private ArrayCollection $creatures;
+    private bool $finished;
 
     public function __construct()
     {
-        $this->creatures = new ArrayCollection();
+        $this->difficulty = 10;
+        $this->finished = false;
     }
-
-
 }
