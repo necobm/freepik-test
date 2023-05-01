@@ -21,7 +21,8 @@
     "doctrine/orm": "^2.14",
     "symfony/runtime": "*",
     "sensio/framework-extra-bundle": "^6.2",
-    "symfony/property-access": "*"
+    "symfony/property-access": "*",
+    "symfony/serializer": "*"
   },
   "autoload": {
     "psr-4": {

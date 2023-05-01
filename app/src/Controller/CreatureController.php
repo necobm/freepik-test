@@ -2,46 +2,39 @@
 
 namespace App\Controller;
 
-use App\Service\FactionService;
+use App\Service\CreatureService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
-#[Route('/faction', name: 'faction_')]
-class FactionController
+#[Route('/creature', name: 'creature_')]
+class CreatureController
 {
     public function __construct(
-        private FactionService $factionService
+        private CreatureService $creatureService
     ){}
 
     #[Route('/', name: 'read_all', methods: ["GET"])]
     public function readAll(): JsonResponse
     {
-        $factions = $this->factionService->getAllFactions();
-        return new JsonResponse($factions);
+        $creatures = $this->creatureService->getAllCreatures();
+        return new JsonResponse($creatures);
     }
 
     #[Route('/{id}', name: 'read', methods: ["GET"])]
     public function read(int $id): JsonResponse
     {
-        $faction = $this->factionService->getFaction(factionId: $id);
-        return is_null($faction)
-            ? new JsonResponse(
-            null,
-            Response::HTTP_NOT_FOUND
-        )   : new JsonResponse(
-            $this->factionService->transformFactionToArray($faction)
-        );
+        $creature = $this->creatureService->getCreature(creatureId: $id);
+        return is_null($creature) ? new JsonResponse(null, Response::HTTP_NOT_FOUND) : new JsonResponse($creature);
     }
 
     #[Route('/', name: 'create', methods: ["POST"])]
     public function create(Request $request): JsonResponse
     {
-        $factionData = json_encode($request->toArray(), true);
+        $creatureData = json_encode($request->toArray(), true);
 
-        if($factionData === false){
+        if($creatureData === false){
             return new JsonResponse([
                 'error' => "The Request Payload has an invalid format"
             ],
@@ -49,10 +42,10 @@ class FactionController
             );
         }
 
-        $faction = $this->factionService->createFactionFromJson($factionData);
+        $creature = $this->creatureService->createCreatureFromJson($creatureData);
 
         return new JsonResponse(
-            $this->factionService->transformFactionToArray($faction),
+            $this->creatureService->transformCreatureToArray($creature),
             Response::HTTP_CREATED
         );
     }
