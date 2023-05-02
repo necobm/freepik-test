@@ -16,27 +16,27 @@ class FactionController
         private FactionService $factionService
     ){}
 
-    #[Route('/', name: 'read_all', methods: ["GET"])]
+    #[Route(null, name: 'read_all', methods: ["GET"])]
     public function readAll(): JsonResponse
     {
-        $factions = $this->factionService->getAllFactions();
-        return new JsonResponse($factions);
+        $factions = $this->factionService->getAll();
+        return new JsonResponse($this->factionService->transformObjectCollectionToArray($factions));
     }
 
     #[Route('/{id}', name: 'read', methods: ["GET"])]
     public function read(int $id): JsonResponse
     {
-        $faction = $this->factionService->getFaction(factionId: $id);
+        $faction = $this->factionService->getOne(resourcesId: $id);
         return is_null($faction)
             ? new JsonResponse(
             null,
             Response::HTTP_NOT_FOUND
         )   : new JsonResponse(
-            $this->factionService->transformFactionToArray($faction)
+            $this->factionService->transformObjectToArray($faction)
         );
     }
 
-    #[Route('/', name: 'create', methods: ["POST"])]
+    #[Route(null, name: 'create', methods: ["POST"])]
     public function create(Request $request): JsonResponse
     {
         $factionData = json_encode($request->toArray(), true);
@@ -49,10 +49,10 @@ class FactionController
             );
         }
 
-        $faction = $this->factionService->createFactionFromJson($factionData);
+        $faction = $this->factionService->createObjectFromJson($factionData);
 
         return new JsonResponse(
-            $this->factionService->transformFactionToArray($faction),
+            $this->factionService->transformObjectToArray($faction),
             Response::HTTP_CREATED
         );
     }

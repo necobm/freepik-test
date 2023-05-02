@@ -44,4 +44,16 @@ class EntityNormalizer extends ObjectNormalizer
     {
         return $this->entityManager->find($type, $data);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function normalize($object, $format = null, array $context = [])
+    {
+        if(array_key_exists('circular_reference_limit_counters', $context)){
+            return method_exists($object, 'getId') ? $object->getId() : $object ;
+        }
+
+        return parent::normalize($object, $format, $context);
+    }
 }

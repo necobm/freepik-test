@@ -43,4 +43,62 @@ class Weapon
     {
         $this->power = new WeaponPower(portability: 1,damage: 1,resistance: 1);
     }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return WeaponPower
+     */
+    public function getPower(): WeaponPower
+    {
+        return $this->power;
+    }
+
+    /**
+     * @param WeaponPower $power
+     */
+    public function setPower(WeaponPower $power): void
+    {
+        $this->power = $power;
+    }
+
+
 }

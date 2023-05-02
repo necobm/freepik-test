@@ -60,6 +60,14 @@ class Creature
     private ?Weapon $secondaryWeapon;
 
     /**
+     * @var Mission|null
+     *
+     * @ORM\ManyToOne(targetEntity="Mission", inversedBy="creatures")
+     * @ORM\JoinColumn(nullable=true, name="mission_id")
+     */
+    private ?Mission $mission;
+
+    /**
      * @return int
      */
     public function getId(): int
@@ -145,6 +153,22 @@ class Creature
     public function setSecondaryWeapon(?Weapon $secondaryWeapon): void
     {
         $this->secondaryWeapon = $secondaryWeapon;
+    }
+
+    /**
+     * @return Mission|null
+     */
+    public function getMission(): ?Mission
+    {
+        return $this->mission;
+    }
+
+    /**
+     * @param Mission|null $mission
+     */
+    public function setMission(?Mission $mission): void
+    {
+        $this->mission = $mission;
     }
 
     public function __toString(): string

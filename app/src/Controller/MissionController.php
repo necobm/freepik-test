@@ -2,41 +2,44 @@
 
 namespace App\Controller;
 
-use App\Service\CreatureService;
+use App\Entity\Mission;
+use App\Service\MissionService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/creature', name: 'creature_')]
-class CreatureController
+#[Route('/mission', name: 'mission_')]
+class MissionController
 {
     public function __construct(
-        private CreatureService $creatureService
+        private MissionService $missionService
     ){}
 
     #[Route(null, name: 'read_all', methods: ["GET"])]
     public function readAll(): JsonResponse
     {
-        $creatures = $this->creatureService->getAll();
-        return new JsonResponse($this->creatureService->transformObjectCollectionToArray($creatures));
+        /** @var Mission[] $missions */
+        $missions = $this->missionService->getAll();
+        return new JsonResponse($this->missionService->transformObjectCollectionToArray($missions));
     }
 
     #[Route('/{id}', name: 'read', methods: ["GET"])]
     public function read(int $id): JsonResponse
     {
-        $creature = $this->creatureService->getOne(resourcesId: $id);
-        return is_null($creature)
+        /** @var Mission $mission */
+        $mission = $this->missionService->getOne(resourcesId: $id);
+        return is_null($mission)
             ? new JsonResponse(null, Response::HTTP_NOT_FOUND)
-            : new JsonResponse($this->creatureService->transformObjectToArray($creature));
+            : new JsonResponse($this->missionService->transformObjectToArray($mission));
     }
 
     #[Route(null, name: 'create', methods: ["POST"])]
     public function create(Request $request): JsonResponse
     {
-        $creatureData = json_encode($request->toArray(), true);
+        $missionData = json_encode($request->toArray(), true);
 
-        if($creatureData === false){
+        if($missionData === false){
             return new JsonResponse([
                 'error' => "The Request Payload has an invalid format"
             ],
@@ -44,10 +47,11 @@ class CreatureController
             );
         }
 
-        $creature = $this->creatureService->createObjectFromJson($creatureData);
+        /** @var Mission $mission */
+        $mission = $this->missionService->createObjectFromJson($missionData);
 
         return new JsonResponse(
-            $this->creatureService->transformObjectToArray($creature),
+            $this->missionService->transformObjectToArray($mission),
             Response::HTTP_CREATED
         );
     }

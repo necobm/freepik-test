@@ -2,19 +2,18 @@
 
 namespace App\Service;
 
-use App\Entity\Creature;
+use App\Entity\Faction;
+use App\Entity\Weapon;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class CreatureService extends BaseService
+class WeaponService extends BaseService
 {
     public function __construct(
         EntityManagerInterface $entityManager,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
     ){
         parent::__construct($entityManager, $serializer);
-        $this->resourceClass = Creature::class;
+        $this->resourceClass = Weapon::class;
     }
-
-
 }

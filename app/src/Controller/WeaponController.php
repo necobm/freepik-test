@@ -2,41 +2,44 @@
 
 namespace App\Controller;
 
-use App\Service\CreatureService;
+use App\Entity\Weapon;
+use App\Service\WeaponService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/creature', name: 'creature_')]
-class CreatureController
+#[Route('/weapon', name: 'weapon_')]
+class WeaponController
 {
     public function __construct(
-        private CreatureService $creatureService
+        private WeaponService $weaponService
     ){}
 
     #[Route(null, name: 'read_all', methods: ["GET"])]
     public function readAll(): JsonResponse
     {
-        $creatures = $this->creatureService->getAll();
-        return new JsonResponse($this->creatureService->transformObjectCollectionToArray($creatures));
+        /** @var Weapon[] $weapons */
+        $weapons = $this->weaponService->getAll();
+        return new JsonResponse($this->weaponService->transformObjectCollectionToArray($weapons));
     }
 
     #[Route('/{id}', name: 'read', methods: ["GET"])]
     public function read(int $id): JsonResponse
     {
-        $creature = $this->creatureService->getOne(resourcesId: $id);
-        return is_null($creature)
+        /** @var Weapon $weapon */
+        $weapon = $this->weaponService->getOne(resourcesId: $id);
+        return is_null($weapon)
             ? new JsonResponse(null, Response::HTTP_NOT_FOUND)
-            : new JsonResponse($this->creatureService->transformObjectToArray($creature));
+            : new JsonResponse($this->weaponService->transformObjectToArray($weapon));
     }
 
     #[Route(null, name: 'create', methods: ["POST"])]
     public function create(Request $request): JsonResponse
     {
-        $creatureData = json_encode($request->toArray(), true);
+        $weaponData = json_encode($request->toArray(), true);
 
-        if($creatureData === false){
+        if($weaponData === false){
             return new JsonResponse([
                 'error' => "The Request Payload has an invalid format"
             ],
@@ -44,10 +47,11 @@ class CreatureController
             );
         }
 
-        $creature = $this->creatureService->createObjectFromJson($creatureData);
+        /** @var Weapon $weapon */
+        $weapon = $this->weaponService->createObjectFromJson($weaponData);
 
         return new JsonResponse(
-            $this->creatureService->transformObjectToArray($creature),
+            $this->weaponService->transformObjectToArray($weapon),
             Response::HTTP_CREATED
         );
     }
