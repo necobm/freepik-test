@@ -74,4 +74,18 @@ class WeaponController
             Response::HTTP_OK
         );
     }
+
+    #[Route('/{id}', name: 'delete', methods: [Request::METHOD_DELETE])]
+    public function delete(int $id): JsonResponse
+    {
+        $weapon = $this->weaponService->getOne(resourcesId: $id);
+
+        if (is_null($weapon)) {
+            return new JsonResponse(null, Response::HTTP_NOT_FOUND);
+        }
+
+        $this->weaponService->remove($weapon);
+
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
 }

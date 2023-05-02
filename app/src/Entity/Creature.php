@@ -47,17 +47,9 @@ class Creature
      * @var Weapon|null
      *
      * @ORM\ManyToOne(targetEntity="Weapon")
-     * @ORM\JoinColumn(nullable=true, name="main_weapon_id")
+     * @ORM\JoinColumn(nullable=true, name="weapon_id")
      */
-    private ?Weapon $mainWeapon;
-
-    /**
-     * @var Weapon|null
-     *
-     * @ORM\ManyToOne(targetEntity="Weapon")
-     * @ORM\JoinColumn(nullable=true, name="secondary_weapon_id")
-     */
-    private ?Weapon $secondaryWeapon;
+    private ?Weapon $weapon;
 
     /**
      * @var Mission|null
@@ -66,6 +58,13 @@ class Creature
      * @ORM\JoinColumn(nullable=true, name="mission_id")
      */
     private ?Mission $mission;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_faction_leader", type="boolean")
+     */
+    private bool $factionLeader = false;
 
     /**
      * @return int
@@ -126,33 +125,17 @@ class Creature
     /**
      * @return Weapon|null
      */
-    public function getMainWeapon(): ?Weapon
+    public function getWeapon(): ?Weapon
     {
-        return $this->mainWeapon;
+        return $this->weapon;
     }
 
     /**
-     * @param Weapon|null $mainWeapon
+     * @param Weapon|null $weapon
      */
-    public function setMainWeapon(?Weapon $mainWeapon): void
+    public function setWeapon(?Weapon $weapon): void
     {
-        $this->mainWeapon = $mainWeapon;
-    }
-
-    /**
-     * @return Weapon|null
-     */
-    public function getSecondaryWeapon(): ?Weapon
-    {
-        return $this->secondaryWeapon;
-    }
-
-    /**
-     * @param Weapon|null $secondaryWeapon
-     */
-    public function setSecondaryWeapon(?Weapon $secondaryWeapon): void
-    {
-        $this->secondaryWeapon = $secondaryWeapon;
+        $this->weapon = $weapon;
     }
 
     /**
@@ -169,6 +152,22 @@ class Creature
     public function setMission(?Mission $mission): void
     {
         $this->mission = $mission;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFactionLeader(): bool
+    {
+        return $this->factionLeader;
+    }
+
+    /**
+     * @param bool $factionLeader
+     */
+    public function setFactionLeader(bool $factionLeader): void
+    {
+        $this->factionLeader = $factionLeader;
     }
 
     public function __toString(): string

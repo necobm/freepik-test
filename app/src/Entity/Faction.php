@@ -39,15 +39,13 @@ class Faction
 
     /**
      * @var Creature
-     *
-     * @ORM\OneToOne(targetEntity="Creature")
      */
     private Creature $leader;
 
     /**
      * @var ArrayCollection<Creature>
      *
-     * @ORM\OneToMany(targetEntity="Creature", mappedBy="faction")
+     * @ORM\OneToMany(targetEntity="Creature", mappedBy="faction", cascade={"persist"}, orphanRemoval=true)
      */
     private Collection $creatures;
 
@@ -97,11 +95,13 @@ class Faction
     }
 
     /**
-     * @return Creature
+     * @return Creature|null
      */
-    public function getLeader(): Creature
+    public function getLeader(): ?Creature
     {
-        return $this->leader;
+        $leaders = $this->creatures->filter(fn($item) => $item->isFactionLeader() === true);
+        // Will be always one leader
+        return $leaders->first() !== false ? $leaders->first() : null;
     }
 
     /**
@@ -109,6 +109,12 @@ class Faction
      */
     public function setLeader(Creature $leader): void
     {
+        $leader->setFactionLeader(true);
+        $leader->setFaction($this);
+        if($this->creatures->contains($leader)){
+            $this->creatures->removeElement($leader);
+        }
+        $this->creatures->add($leader);
         $this->leader = $leader;
     }
 
@@ -126,6 +132,14 @@ class Faction
     public function setCreatures(Collection $creatures): void
     {
         $this->creatures = $creatures;
+    }
+
+    public function removeCreature(Creature $creature): void
+    {
+        if($this->creatures->contains($creature)){
+            $this->creatures->removeElement($creature);
+            $creature->setFaction(null);
+        }
     }
 
     public function __toString(): string

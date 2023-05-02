@@ -70,4 +70,18 @@ class CreatureController
             Response::HTTP_OK
         );
     }
+
+    #[Route('/{id}', name: 'delete', methods: [Request::METHOD_DELETE])]
+    public function delete(int $id): JsonResponse
+    {
+        $creature = $this->creatureService->getOne(resourcesId: $id);
+
+        if (is_null($creature)) {
+            return new JsonResponse(null, Response::HTTP_NOT_FOUND);
+        }
+
+        $this->creatureService->remove($creature);
+
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
 }

@@ -23,7 +23,7 @@ class FactionController
         return new JsonResponse($this->factionService->transformObjectCollectionToArray($factions));
     }
 
-    #[Route('/{id}', name: 'read', methods: ["GET"])]
+    #[Route('/{id}', name: 'read', methods: [Request::METHOD_GET])]
     public function read(int $id): JsonResponse
     {
         $faction = $this->factionService->getOne(resourcesId: $id);
@@ -36,7 +36,7 @@ class FactionController
         );
     }
 
-    #[Route(null, name: 'create', methods: ["POST"])]
+    #[Route(null, name: 'create', methods: [Request::METHOD_POST])]
     public function create(Request $request): JsonResponse
     {
         $factionData = json_encode($request->toArray(), true);
@@ -57,7 +57,7 @@ class FactionController
         );
     }
 
-    #[Route('/{id}', name: 'update', methods: ["PUT", "PATCH"])]
+    #[Route('/{id}', name: 'update', methods: [Request::METHOD_PUT, Request::METHOD_PATCH])]
     public function update(int $id, Request $request): JsonResponse
     {
         $faction = $this->factionService->getOne(resourcesId: $id);
@@ -74,5 +74,19 @@ class FactionController
             $this->factionService->transformObjectToArray($faction),
             Response::HTTP_OK
         );
+    }
+
+    #[Route('/{id}', name: 'delete', methods: [Request::METHOD_DELETE])]
+    public function delete(int $id): JsonResponse
+    {
+        $faction = $this->factionService->getOne(resourcesId: $id);
+
+        if (is_null($faction)) {
+            return new JsonResponse(null, Response::HTTP_NOT_FOUND);
+        }
+
+        $this->factionService->remove($faction);
+
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 }

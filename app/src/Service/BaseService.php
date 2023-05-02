@@ -15,7 +15,7 @@ class BaseService
     ){}
 
     /**
-     * @return array
+     * @return object[]
      */
     public function getAll(): array
     {
@@ -49,6 +49,12 @@ class BaseService
         return $object;
     }
 
+    /**
+     * @param string $jsonData
+     * @param object $object
+     * @return object
+     * @throws \Exception
+     */
     public function updateObjectFromJson(string $jsonData, object $object): object
     {
         $this->serializer->deserialize($jsonData, $this->resourceClass, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $object]);
@@ -60,6 +66,16 @@ class BaseService
         $this->entityManager->persist($object);
         $this->entityManager->flush();
         return $object;
+    }
+
+    /**
+     * @param object $object
+     * @return void
+     */
+    public function remove(object $object): void
+    {
+        $this->entityManager->remove($object);
+        $this->entityManager->flush();
     }
 
     /**

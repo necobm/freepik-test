@@ -74,4 +74,18 @@ class MissionController
             Response::HTTP_OK
         );
     }
+
+    #[Route('/{id}', name: 'delete', methods: [Request::METHOD_DELETE])]
+    public function delete(int $id): JsonResponse
+    {
+        $mission = $this->missionService->getOne(resourcesId: $id);
+
+        if (is_null($mission)) {
+            return new JsonResponse(null, Response::HTTP_NOT_FOUND);
+        }
+
+        $this->missionService->remove($mission);
+
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
 }
