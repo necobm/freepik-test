@@ -55,4 +55,23 @@ class WeaponController
             Response::HTTP_CREATED
         );
     }
+
+    #[Route('/{id}', name: 'update', methods: ["PUT", "PATCH"])]
+    public function update(int $id, Request $request): JsonResponse
+    {
+        $weapon = $this->weaponService->getOne(resourcesId: $id);
+
+        if (is_null($weapon)) {
+            return new JsonResponse(null, Response::HTTP_NOT_FOUND);
+        }
+
+        $weaponData = json_encode($request->toArray(), true);
+
+        $weapon = $this->weaponService->updateObjectFromJson($weaponData, $weapon);
+
+        return new JsonResponse(
+            $this->weaponService->transformObjectToArray($weapon),
+            Response::HTTP_OK
+        );
+    }
 }

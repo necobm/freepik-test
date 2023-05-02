@@ -55,4 +55,23 @@ class MissionController
             Response::HTTP_CREATED
         );
     }
+
+    #[Route('/{id}', name: 'update', methods: ["PUT", "PATCH"])]
+    public function update(int $id, Request $request): JsonResponse
+    {
+        $mission = $this->missionService->getOne(resourcesId: $id);
+
+        if (is_null($mission)) {
+            return new JsonResponse(null, Response::HTTP_NOT_FOUND);
+        }
+
+        $missionData = json_encode($request->toArray(), true);
+
+        $mission = $this->missionService->updateObjectFromJson($missionData, $mission);
+
+        return new JsonResponse(
+            $this->missionService->transformObjectToArray($mission),
+            Response::HTTP_OK
+        );
+    }
 }

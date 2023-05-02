@@ -51,4 +51,23 @@ class CreatureController
             Response::HTTP_CREATED
         );
     }
+
+    #[Route('/{id}', name: 'update', methods: ["PUT", "PATCH"])]
+    public function update(int $id, Request $request): JsonResponse
+    {
+        $creature = $this->creatureService->getOne(resourcesId: $id);
+
+        if (is_null($creature)) {
+           return new JsonResponse(null, Response::HTTP_NOT_FOUND);
+        }
+
+        $creatureData = json_encode($request->toArray(), true);
+
+        $creature = $this->creatureService->updateObjectFromJson($creatureData, $creature);
+
+        return new JsonResponse(
+            $this->creatureService->transformObjectToArray($creature),
+            Response::HTTP_OK
+        );
+    }
 }

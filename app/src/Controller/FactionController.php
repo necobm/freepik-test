@@ -56,4 +56,23 @@ class FactionController
             Response::HTTP_CREATED
         );
     }
+
+    #[Route('/{id}', name: 'update', methods: ["PUT", "PATCH"])]
+    public function update(int $id, Request $request): JsonResponse
+    {
+        $faction = $this->factionService->getOne(resourcesId: $id);
+
+        if (is_null($faction)) {
+            return new JsonResponse(null, Response::HTTP_NOT_FOUND);
+        }
+
+        $factionData = json_encode($request->toArray(), true);
+
+        $faction = $this->factionService->updateObjectFromJson($factionData, $faction);
+
+        return new JsonResponse(
+            $this->factionService->transformObjectToArray($faction),
+            Response::HTTP_OK
+        );
+    }
 }

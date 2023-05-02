@@ -50,8 +50,8 @@ class EntityNormalizer extends ObjectNormalizer
      */
     public function normalize($object, $format = null, array $context = [])
     {
-        if(array_key_exists('circular_reference_limit_counters', $context)){
-            return method_exists($object, 'getId') ? $object->getId() : $object ;
+        if(array_key_exists('circular_reference_limit_counters', $context) && method_exists($object, 'getId')){
+            return $object->getId();
         }
 
         return parent::normalize($object, $format, $context);

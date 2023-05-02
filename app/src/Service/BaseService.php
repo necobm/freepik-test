@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class BaseService
@@ -38,6 +39,19 @@ class BaseService
     public function createObjectFromJson(string $jsonData): object
     {
         $object = $this->serializer->deserialize($jsonData, $this->resourceClass, 'json');
+
+        if (get_class($object) !== $this->resourceClass) {
+            throw new \Exception("Failed decoding JSON into an object");
+        }
+
+        $this->entityManager->persist($object);
+        $this->entityManager->flush();
+        return $object;
+    }
+
+    public function updateObjectFromJson(string $jsonData, object $object): object
+    {
+        $this->serializer->deserialize($jsonData, $this->resourceClass, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $object]);
 
         if (get_class($object) !== $this->resourceClass) {
             throw new \Exception("Failed decoding JSON into an object");
