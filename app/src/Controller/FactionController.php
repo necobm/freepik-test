@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route('/faction', name: 'faction_')]
 class FactionController
@@ -76,7 +77,7 @@ class FactionController
         );
     }
 
-    #[Route('/{id}', name: 'delete', methods: [Request::METHOD_DELETE])]
+    #[Route('/{id}', name: 'delete', methods: ['DELETE'])]
     public function delete(int $id): JsonResponse
     {
         $faction = $this->factionService->getOne(resourcesId: $id);
@@ -85,7 +86,15 @@ class FactionController
             return new JsonResponse(null, Response::HTTP_NOT_FOUND);
         }
 
-        $this->factionService->remove($faction);
+        try{
+            $this->factionService->remove($faction);
+        }
+        catch (AccessDeniedException $exception){
+            return new JsonResponse([
+                'message' => $exception->getMessage()
+            ], Response::HTTP_FORBIDDEN);
+        }
+
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }

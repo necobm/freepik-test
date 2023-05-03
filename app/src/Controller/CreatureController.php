@@ -72,7 +72,7 @@ class CreatureController
         );
     }
 
-    #[Route('/{id}', name: 'delete', methods: [Request::METHOD_DELETE])]
+    #[Route('/{id}', name: 'delete', methods: ['DELETE'])]
     public function delete(int $id): JsonResponse
     {
         $creature = $this->creatureService->getOne(resourcesId: $id);
@@ -87,7 +87,7 @@ class CreatureController
         catch (AccessDeniedException $exception){
             return new JsonResponse([
                 'message' => $exception->getMessage()
-            ], 403);
+            ], Response::HTTP_FORBIDDEN);
         }
 
 

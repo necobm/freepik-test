@@ -1,0 +1,6 @@
+App\Entity\Mission:
+    'Mission_{1..3}':
+        name: '<sentence(4, true)>'
+        description: '<text()>'
+        difficulty: '<numberBetween(1, 10)>'
+        finished: '<boolean()>'

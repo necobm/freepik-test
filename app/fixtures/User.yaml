@@ -1,0 +1,10 @@
+App\Entity\User:
+    'User_1':
+        username: 'test'
+        password: 'dGVzdDo5Y2E0MjM3YmU0NmFjODZhODQzNmZhODg3MjYyZjVhOA=='
+        roles: ['ROLE_USER']
+
+    'User_2':
+        username: 'admin'
+        password: 'YWRtaW46ZEdWemREbzVZMkUwTWpNM1ltVTBObUZqT0RaaE9EUXpObVpoT0RnM01qWXlaalZoTw=='
+        roles: ['ROLE_USER,ROLE_ADMIN']

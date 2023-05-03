@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route('/weapon', name: 'weapon_')]
 class WeaponController
@@ -75,7 +76,7 @@ class WeaponController
         );
     }
 
-    #[Route('/{id}', name: 'delete', methods: [Request::METHOD_DELETE])]
+    #[Route('/{id}', name: 'delete', methods: ['DELETE'])]
     public function delete(int $id): JsonResponse
     {
         $weapon = $this->weaponService->getOne(resourcesId: $id);
@@ -84,7 +85,15 @@ class WeaponController
             return new JsonResponse(null, Response::HTTP_NOT_FOUND);
         }
 
-        $this->weaponService->remove($weapon);
+        try{
+            $this->weaponService->remove($weapon);
+        }
+        catch (AccessDeniedException $exception){
+            return new JsonResponse([
+                'message' => $exception->getMessage()
+            ], Response::HTTP_FORBIDDEN);
+        }
+
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }

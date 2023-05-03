@@ -1,0 +1,8 @@
+App\Entity\AccessToken:
+    'AccessToken_1':
+        tokenValue: 'dGVzdDpkR1Z6ZERvNVkyRTBNak0zWW1VME5tRmpPRFpoT0RRek5tWmhPRGczTWpZ'
+        userIdentification: 'test'
+
+    'AccessToken_2':
+        tokenValue: 'YWRtaW46WVdSdGFXNDZaRWRXZW1SRWJ6VlpNa1V3VFdwTk0xbHRWVEJPYlVacVQwUmFhRTlFVVhwT2JWcG9UMFJuTTAxcVdYbGFhbFpvVHc'
+        userIdentification: 'admin'

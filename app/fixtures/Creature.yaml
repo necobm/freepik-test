@@ -1,0 +1,9 @@
+App\Entity\Creature:
+    'Customer_{1..10}':
+        name: '<firstName()>'
+        age: '<numberBetween(25, 400)>'
+        factionLeader: '<boolean()>'
+        faction: '@Faction_*'
+        mission: '@Mission_*'
+        weapon: '@Weapon_<current()>'
+
