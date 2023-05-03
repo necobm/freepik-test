@@ -1,0 +1,17 @@
+security:
+  providers:
+    lotr_api_user_provider:
+      entity:
+        class: App\Entity\User
+        property: username
+
+  firewalls:
+    lotr_api:
+      pattern: ^/lotr/api
+      stateless: true
+      provider: lotr_api_user_provider
+      access_token:
+        token_handler: App\Security\AccessTokenHandler
+
+  access_control:
+    - { path: ^/lotr/api, roles: IS_AUTHENTICATED_FULLY }
