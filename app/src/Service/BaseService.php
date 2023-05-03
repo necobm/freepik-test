@@ -5,7 +5,6 @@ namespace App\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -43,6 +42,9 @@ class BaseService
      */
     public function createObjectFromJson(string $jsonData): object
     {
+        if (json_decode($jsonData) === null || json_decode($jsonData) === false) {
+            throw new \Exception("Invalid JSON format");
+        }
         $object = $this->serializer->deserialize($jsonData, $this->resourceClass, 'json');
 
         if (get_class($object) !== $this->resourceClass) {
@@ -62,6 +64,9 @@ class BaseService
      */
     public function updateObjectFromJson(string $jsonData, object $object): object
     {
+        if (json_decode($jsonData) === null || json_decode($jsonData) === false) {
+            throw new \Exception("Invalid JSON format");
+        }
         $this->serializer->deserialize($jsonData, $this->resourceClass, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $object]);
 
         if (get_class($object) !== $this->resourceClass) {
@@ -94,7 +99,7 @@ class BaseService
     {
         $jsonData = $this->serializer->serialize($object, 'json');
         $arrayData = json_decode($jsonData, true);
-        return $arrayData !== false ? $arrayData : [];
+        return ($arrayData !== false && $arrayData !== null) ? $arrayData : [];
     }
 
     /**
