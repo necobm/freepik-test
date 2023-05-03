@@ -1,10 +1,9 @@
 <?php
 
-namespace Service;
+namespace Tests\Service;
 
 use App\Entity\Creature;
 use App\Entity\Faction;
-use App\Service\BaseService;
 use App\Service\CreatureService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
