@@ -36,6 +36,13 @@ class User implements UserInterface
      */
     private string $password;
 
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="roles", type="simple_array", nullable=false)
+     */
+    private array $roles;
+
 
     /**
      * @return int
@@ -79,7 +86,18 @@ class User implements UserInterface
 
     public function getRoles(): array
     {
-        return ['ROLE_USER'];
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    /**
+     * @param array $roles
+     */
+    public function setRoles(array $roles): void
+    {
+        $this->roles = $roles;
     }
 
     public function eraseCredentials()
