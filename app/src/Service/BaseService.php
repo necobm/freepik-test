@@ -3,6 +3,10 @@
 namespace App\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -11,6 +15,7 @@ class BaseService
     public function __construct(
         protected EntityManagerInterface $entityManager,
         protected SerializerInterface $serializer,
+        protected Security $security,
         protected string $resourceClass = ""
     ){}
 
@@ -74,6 +79,9 @@ class BaseService
      */
     public function remove(object $object): void
     {
+        if( !$this->checkAccessRights(Request::METHOD_DELETE) ){
+            throw new AccessDeniedException("Insufficient rights to perform this operation");
+        }
         $this->entityManager->remove($object);
         $this->entityManager->flush();
     }
@@ -101,5 +109,17 @@ class BaseService
         }
 
         return $dataArray;
+    }
+
+    /**
+     * @param string $operation
+     * @return bool
+     */
+    protected function checkAccessRights(string $operation): bool
+    {
+        return match ($operation) {
+            Request::METHOD_DELETE => $this->security->isGranted('ROLE_ADMIN'),
+            default => true
+        };
     }
 }

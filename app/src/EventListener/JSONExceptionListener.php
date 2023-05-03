@@ -23,19 +23,21 @@ class JSONExceptionListener implements EventSubscriberInterface
     {
         $exception = $event->getThrowable();
 
-        $httpCode = match ($exception) {
-            $exception instanceof HttpExceptionInterface => $exception->getStatusCode(),
-            get_class($exception) === AccessDeniedException::class => 401,
+        $httpCode = match (get_class($exception)) {
+            AccessDeniedException::class => 401,
             default => 500
         };
 
+        if ($exception instanceof HttpExceptionInterface) {
+            $httpCode = $exception->getStatusCode();
+        }
+
         $content = [
-            'code' => $httpCode,
             'message' => $exception->getMessage()
         ];
 
         $event->setResponse(
-            new JsonResponse($content, $content['code'])
+            new JsonResponse($content, $httpCode)
         );
     }
 }

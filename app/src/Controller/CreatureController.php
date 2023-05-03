@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 #[Route('/creature', name: 'creature_')]
 class CreatureController
@@ -80,7 +81,15 @@ class CreatureController
             return new JsonResponse(null, Response::HTTP_NOT_FOUND);
         }
 
-        $this->creatureService->remove($creature);
+        try{
+            $this->creatureService->remove($creature);
+        }
+        catch (AccessDeniedException $exception){
+            return new JsonResponse([
+                'message' => $exception->getMessage()
+            ], 403);
+        }
+
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
