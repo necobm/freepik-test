@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Exception\DenormalizationException;
+use App\Exception\InvalidFormatException;
 use App\Service\FactionService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +26,7 @@ class FactionController
         return new JsonResponse($this->factionService->transformObjectCollectionToArray($factions));
     }
 
-    #[Route('/{id}', name: 'read', methods: [Request::METHOD_GET])]
+    #[Route('/{id}', name: 'read', methods: ['GET'])]
     public function read(int $id): JsonResponse
     {
         $faction = $this->factionService->getOne(resourcesId: $id);
@@ -37,7 +39,10 @@ class FactionController
         );
     }
 
-    #[Route(null, name: 'create', methods: [Request::METHOD_POST])]
+    /**
+     * @throws DenormalizationException|InvalidFormatException
+     */
+    #[Route(null, name: 'create', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
         $factionData = json_encode($request->toArray(), true);
@@ -58,7 +63,10 @@ class FactionController
         );
     }
 
-    #[Route('/{id}', name: 'update', methods: [Request::METHOD_PUT, Request::METHOD_PATCH])]
+    /**
+     * @throws DenormalizationException|InvalidFormatException
+     */
+    #[Route('/{id}', name: 'update', methods: ['PUT', 'PATCH'])]
     public function update(int $id, Request $request): JsonResponse
     {
         $faction = $this->factionService->getOne(resourcesId: $id);

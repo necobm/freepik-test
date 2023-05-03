@@ -2,6 +2,8 @@
 
 namespace App\EventListener;
 
+use App\Exception\DenormalizationException;
+use App\Exception\InvalidFormatException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -25,6 +27,7 @@ class JSONExceptionListener implements EventSubscriberInterface
 
         $httpCode = match (get_class($exception)) {
             AccessDeniedException::class => 401,
+            InvalidFormatException::class => 400,
             default => 500
         };
 

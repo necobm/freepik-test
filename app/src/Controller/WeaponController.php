@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Weapon;
+use App\Exception\DenormalizationException;
+use App\Exception\InvalidFormatException;
 use App\Service\WeaponService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,6 +37,9 @@ class WeaponController
             : new JsonResponse($this->weaponService->transformObjectToArray($weapon));
     }
 
+    /**
+     * @throws DenormalizationException|InvalidFormatException
+     */
     #[Route(null, name: 'create', methods: ["POST"])]
     public function create(Request $request): JsonResponse
     {
@@ -57,6 +62,9 @@ class WeaponController
         );
     }
 
+    /**
+     * @throws InvalidFormatException|DenormalizationException
+     */
     #[Route('/{id}', name: 'update', methods: ["PUT", "PATCH"])]
     public function update(int $id, Request $request): JsonResponse
     {
@@ -93,7 +101,6 @@ class WeaponController
                 'message' => $exception->getMessage()
             ], Response::HTTP_FORBIDDEN);
         }
-
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }

@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Exception\DenormalizationException;
+use App\Exception\InvalidFormatException;
 use App\Service\CreatureService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,16 +34,20 @@ class CreatureController
             : new JsonResponse($this->creatureService->transformObjectToArray($creature));
     }
 
+    /**
+     * @throws DenormalizationException|InvalidFormatException
+     */
     #[Route(null, name: 'create', methods: ["POST"])]
     public function create(Request $request): JsonResponse
     {
         $creatureData = json_encode($request->toArray(), true);
 
-        if($creatureData === false){
-            return new JsonResponse([
-                'error' => "The Request Payload has an invalid format"
-            ],
-            Response::HTTP_BAD_REQUEST
+        if ($creatureData === false) {
+            return new JsonResponse(
+                [
+                    'message' => "The Request Payload has an invalid format"
+                ],
+                Response::HTTP_BAD_REQUEST
             );
         }
 
@@ -53,6 +59,9 @@ class CreatureController
         );
     }
 
+    /**
+     * @throws InvalidFormatException|DenormalizationException
+     */
     #[Route('/{id}', name: 'update', methods: ["PUT", "PATCH"])]
     public function update(int $id, Request $request): JsonResponse
     {
@@ -81,15 +90,14 @@ class CreatureController
             return new JsonResponse(null, Response::HTTP_NOT_FOUND);
         }
 
-        try{
+        try {
             $this->creatureService->remove($creature);
         }
-        catch (AccessDeniedException $exception){
+        catch (AccessDeniedException $exception) {
             return new JsonResponse([
                 'message' => $exception->getMessage()
             ], Response::HTTP_FORBIDDEN);
         }
-
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }

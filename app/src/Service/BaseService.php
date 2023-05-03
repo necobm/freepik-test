@@ -2,6 +2,8 @@
 
 namespace App\Service;
 
+use App\Exception\DenormalizationException;
+use App\Exception\InvalidFormatException;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,17 +40,17 @@ class BaseService
     /**
      * @param string $jsonData
      * @return object
-     * @throws \Exception
+     * @throws InvalidFormatException|DenormalizationException
      */
     public function createObjectFromJson(string $jsonData): object
     {
         if (json_decode($jsonData) === null || json_decode($jsonData) === false) {
-            throw new \Exception("Invalid JSON format");
+            throw new InvalidFormatException("Invalid JSON format");
         }
         $object = $this->serializer->deserialize($jsonData, $this->resourceClass, 'json');
 
         if (get_class($object) !== $this->resourceClass) {
-            throw new \Exception("Failed decoding JSON into an object");
+            throw new DenormalizationException("Denormalization process has failed");
         }
 
         $this->entityManager->persist($object);
@@ -60,17 +62,17 @@ class BaseService
      * @param string $jsonData
      * @param object $object
      * @return object
-     * @throws \Exception
+     * @throws InvalidFormatException|DenormalizationException
      */
     public function updateObjectFromJson(string $jsonData, object $object): object
     {
         if (json_decode($jsonData) === null || json_decode($jsonData) === false) {
-            throw new \Exception("Invalid JSON format");
+            throw new InvalidFormatException("Invalid JSON format");
         }
         $this->serializer->deserialize($jsonData, $this->resourceClass, 'json', [AbstractNormalizer::OBJECT_TO_POPULATE => $object]);
 
         if (get_class($object) !== $this->resourceClass) {
-            throw new \Exception("Failed decoding JSON into an object");
+            throw new DenormalizationException("Denormalization process has failed");
         }
 
         $this->entityManager->persist($object);

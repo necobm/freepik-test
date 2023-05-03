@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Mission;
+use App\Exception\DenormalizationException;
+use App\Exception\InvalidFormatException;
 use App\Service\MissionService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,6 +37,9 @@ class MissionController
             : new JsonResponse($this->missionService->transformObjectToArray($mission));
     }
 
+    /**
+     * @throws InvalidFormatException|DenormalizationException
+     */
     #[Route(null, name: 'create', methods: ["POST"])]
     public function create(Request $request): JsonResponse
     {
@@ -57,6 +62,9 @@ class MissionController
         );
     }
 
+    /**
+     * @throws InvalidFormatException|DenormalizationException
+     */
     #[Route('/{id}', name: 'update', methods: ["PUT", "PATCH"])]
     public function update(int $id, Request $request): JsonResponse
     {
