@@ -4,6 +4,8 @@ namespace Tests\Service;
 
 use App\Entity\Creature;
 use App\Entity\Faction;
+use App\Exception\DenormalizationException;
+use App\Exception\InvalidFormatException;
 use App\Service\CreatureService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
@@ -87,12 +89,13 @@ class CreatureServiceTest extends TestCase
      */
     public function testCreateObjectFromJsonThrowsException(int $step, string $json, object $object)
     {
-        $this->expectException(\Exception::class);
         switch ($step) {
             case 1:
-                $this->expectExceptionMessage("Failed decoding JSON into an object");
+                $this->expectException(DenormalizationException::class);
+                $this->expectExceptionMessage("Denormalization process has failed");
                 break;
             case 2:
+                $this->expectException(InvalidFormatException::class);
                 $this->expectExceptionMessage("Invalid JSON format");
                 break;
         }
@@ -127,12 +130,13 @@ class CreatureServiceTest extends TestCase
      */
     public function testUpdateObjectFromJsonThrowsException(int $step, string $json, object $object)
     {
-        $this->expectException(\Exception::class);
         switch ($step) {
             case 1:
-                $this->expectExceptionMessage("Failed decoding JSON into an object");
+                $this->expectException(DenormalizationException::class);
+                $this->expectExceptionMessage("Denormalization process has failed");
                 break;
             case 2:
+                $this->expectException(InvalidFormatException::class);
                 $this->expectExceptionMessage("Invalid JSON format");
                 break;
         }

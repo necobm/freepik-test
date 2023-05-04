@@ -3,6 +3,7 @@ version: '3.7'
 services:
   php:
     image: graphicresources/itpg-api-coding-task:development
+    container_name: freepik_php
     working_dir: /var/www
     command: php -S 0.0.0.0:8080 -t public
     environment:
@@ -16,6 +17,7 @@ services:
 
   db:
     image: percona
+    container_name: freepik_db
     restart: always
     ports:
       - "3306:3306"

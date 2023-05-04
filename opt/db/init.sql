@@ -5,78 +5,65 @@ USE `lotr`;
 
 DROP TABLE IF EXISTS `factions`;
 CREATE TABLE `factions` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `faction_name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `leader` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+    `id` INT AUTO_INCREMENT NOT NULL,
+    `faction_name` VARCHAR(128) CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_general_ci`,
+    `description` TEXT CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_general_ci`,
+    PRIMARY KEY(`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_general_ci` ENGINE = InnoDB;
 
-DROP TABLE IF EXISTS `equipments`;
-CREATE TABLE `equipments` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `type` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `made_by` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `character_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `character_id` (`character_id`),
-  CONSTRAINT `equipments_ibfk_1` FOREIGN KEY (`character_id`) REFERENCES `characters` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+DROP TABLE IF EXISTS `creatures`;
+CREATE TABLE `creatures` (
+    `id` INT AUTO_INCREMENT NOT NULL,
+    `faction_id` INT DEFAULT NULL,
+    `mission_id` INT DEFAULT NULL,
+    `weapon_id` INT DEFAULT NULL,
+    `name` VARCHAR(128) CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci`,
+    `age` INT NOT NULL,
+    `is_faction_leader` TINYINT(1) NOT NULL,
+    UNIQUE INDEX UNIQ_A1F495645E237E06 (`name`),
+    INDEX IDX_A1F49564BE6CAE90 (`mission_id`),
+    INDEX IDX_A1F495644448F8DA (`faction_id`),
+    INDEX IDX_A1F4956495B82273 (`weapon_id`),
+    PRIMARY KEY(id)
+)   DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 
-DROP TABLE IF EXISTS `characters`;
-CREATE TABLE `characters` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `name` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `birth_date` date NOT NULL,
-  `kingdom` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `equipment_id` int NOT NULL,
-  `faction_id` int NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `equipment_id` (`equipment_id`),
-  KEY `faction_id` (`faction_id`),
-  CONSTRAINT `characters_ibfk_1` FOREIGN KEY (`equipment_id`) REFERENCES `equipments` (`id`),
-  CONSTRAINT `characters_ibfk_2` FOREIGN KEY (`faction_id`) REFERENCES `factions` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-INSERT INTO `factions` (
-  `id`,
-  `faction_name`,
-  `description`,
-  `leader`
-) VALUES (
-  1,
-  'MORDOR',
-  'Mordor es un país situado al sureste de la Tierra Media, que tuvo gran importancia durante la Guerra del Anillo por ser el lugar donde Sauron, el Señor Oscuro, decidió edificar su fortaleza de Barad-dûr para intentar atacar y dominar a todos los pueblos de la Tierra Media.',
-  'SAURON'
-);
+DROP TABLE IF EXISTS `missions`;
+CREATE TABLE `missions` (
+    `id` INT AUTO_INCREMENT NOT NULL,
+    `name` VARCHAR(128) CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci`,
+    `description` TEXT CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci`,
+    `difficulty` INT NOT NULL,
+    `finished` TINYINT(1) NOT NULL, PRIMARY KEY(id)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 
-INSERT INTO `equipments` (
-  `id`,
-  `name`,
-  `type`,
-  `made_by`,
-  `character_id`
-) VALUES (
-  1,
-  'Maza de Sauron',
-  'arma',
-  'desconocido',
-  1
-);
+DROP TABLE IF EXISTS `weapons`;
+CREATE TABLE `weapons` (
+    `id` INT AUTO_INCREMENT NOT NULL,
+    `name` VARCHAR(128) CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci`,
+    `description` LONGTEXT CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci`,
+    `portability` INT NOT NULL,
+    `damage` INT NOT NULL,
+    `resistance` INT NOT NULL, UNIQUE INDEX UNIQ_520EBBE15E237E06 (`name`),
+    PRIMARY KEY(id)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
 
-INSERT INTO `characters` (
-  `id`,
-  `name`,
-  `birth_date`,
-  `kingdom`,
-  `equipment_id`,
-  `faction_id`
-) VALUES (
-  1,
-  'SAURON',
-  '3019-03-25',
-  'AINUR',
-  1,
-  1
-);
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE `user` (
+    `id` INT AUTO_INCREMENT NOT NULL,
+    `username` VARCHAR(128) CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci`,
+    `password` VARCHAR(255) CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci`,
+    `roles` LONGTEXT CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci` COMMENT '(DC2Type:simple_array)',
+    UNIQUE INDEX UNIQ_8D93D649F85E0677 (`username`),
+    PRIMARY KEY(`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+
+DROP TABLE IF EXISTS `access_tokens`;
+CREATE TABLE `access_tokens` (
+    `id` INT AUTO_INCREMENT NOT NULL,
+    `token_value` VARCHAR(255) CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci`,
+    `user_identification` VARCHAR(128) CHARACTER SET utf8mb4 NOT NULL COLLATE `utf8mb4_unicode_ci`,
+    UNIQUE INDEX UNIQ_58D184BCBEA95C75 (`token_value`),
+    PRIMARY KEY(`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB;
+

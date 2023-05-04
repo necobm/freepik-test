@@ -48,3 +48,26 @@ A light infrastructure is provided with a populated MySQL database with example 
 Beyond the requirements of this test we want to see what you can do, feel free to show us your real potential and, the
 most important part, have fun!
 
+## Setting up local environment
+
+After the Build step, you can run the containers with Docker Compose (V2)
+
+```bash
+docker compose up -d
+```
+
+In order to populate test data into the database, you must run the fallowing command:
+
+```bash
+docker exec -i freepik_php sh -c 'php bin/console hautelook:fixtures:load -n --env=dev --no-bundles'
+```
+
+## Run tests
+
+```bash
+docker exec -i freepik_php sh -c 'vendor/bin/phpunit'
+```
+
+## API Documentation
+
+https://documenter.getpostman.com/view/11366921/2s93eVXDeG#introduction 
