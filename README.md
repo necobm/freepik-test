@@ -1,6 +1,6 @@
-# API Backend Coding Task
+# API RESTFull with Symfony 6, without using API Platform
 
-This is the technical test project for API oriented backends.
+This is a coding lab project to test how easy and fast could be an API RESTFull implementation using Symfony 6, without API Platform
 
 ## Technical requirements
 
@@ -18,35 +18,17 @@ This command executes the Docker image building process and performs the [Compos
 
 Type `make help` for more tasks present in `Makefile`.
 
-## Functional requirements
-
-**Implement a CRUD (Create-Read-Update-Delete) API.**
-
-The following add-ons will be positively evaluated:
+## Features
 
 - Authentication
 - Authorization
-- Cache
-- Documentation
+- Resources CRUD operations
 
 ---
 
 A light infrastructure is provided with a populated MySQL database with example data and a web server using PHP built-in development server.
 
-## Non functional requirements
-
-- The presence of unit, integration and acceptance tests will positively appreciated.
-- Use whatever you want to achieve this: MVC, hexagonal arquitecture, DDD, etc.
-- A deep knowledge about SOLID, YAGNI or KISS would be positively evaluated.
-- DevOps knowledge (GitHub Actions, Jenkins, etc.) would be appreciated too.
-- It's important to find a balance between code quality and deadline; releasing a non functional application in time or a perfect application out of time may be negatively evaluated.
-- Good and well-documented commits will be appreciated.
-- Efficient and smart use of third party libraries will be positively appreciated.
-
 ---
-
-Beyond the requirements of this test we want to see what you can do, feel free to show us your real potential and, the
-most important part, have fun!
 
 ## Setting up local environment
 
